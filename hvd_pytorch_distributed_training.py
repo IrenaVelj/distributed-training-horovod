@@ -33,7 +33,7 @@ train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset,
                                                                 num_replicas=hvd.size(), 
                                                                 rank=hvd.rank())
 
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=32, sampler=train_sampler)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=8, sampler=train_sampler)
 
 # Build model...
 model = NeuralNet()
@@ -59,5 +59,5 @@ for epoch in range(100):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        if batch_idx % 1000 == 0:
+        if batch_idx % 1000 == 0 and hvd.rank() == 0:
             print('Train Epoch: {} [{}/{}]\tLoss: {}'.format(epoch, batch_idx * len(data), len(train_sampler), loss.item()))
