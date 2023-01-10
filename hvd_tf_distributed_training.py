@@ -1,8 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras import layers
-from tensorflow.keras import models
 import horovod.tensorflow.keras as hvd
-import numpy as np
 import tensorflow_datasets as tfds
 
 if __name__=='__main__':
@@ -19,6 +16,7 @@ if __name__=='__main__':
     if gpus:
         tf.config.experimental.set_visible_devices(gpus[hvd.local_rank()], 'GPU')
 
+
     train_ds, test_ds = tfds.load('cifar10', 
                                 split=['train','test'], 
                                 as_supervised = True, 
@@ -31,6 +29,8 @@ if __name__=='__main__':
 
     if hvd.rank() == 0:
         print(model.summary())
+
+    print(hvd.size())
 
     opt = tf.keras.optimizers.SGD(0.0005 * hvd.size())
     opt = hvd.DistributedOptimizer(opt)
