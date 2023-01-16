@@ -11,6 +11,8 @@ if __name__=='__main__':
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
+    # To optimize GPU utilization
+    # If memory growth is enabled for a PhysicalDevice, the runtime initialization will not allocate all memory on the device
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
     if gpus:
